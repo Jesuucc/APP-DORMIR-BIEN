@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#08111f">
+
+<title>🌙 Hora de Dormir</title>
+
+<style>
+
+:root{
+    --bg:#08111f;
+    --panel:#142238;
+    --panel2:#1d2d46;
+    --text:#ffffff;
+    --muted:#9fb3c8;
+
+    --blue:#3b82f6;
+    --green:#22c55e;
+    --yellow:#facc15;
+    --red:#ef4444;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+
+    background:
+    radial-gradient(circle at top,#1b3556,#08111f);
+
+    color:var(--text);
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    padding:20px;
+
+}
+
+.app{
+
+    width:100%;
+    max-width:430px;
+
+}
+
+.card{
+
+    background:var(--panel);
+
+    border-radius:24px;
+
+    padding:22px;
+
+    box-shadow:0 20px 40px rgba(0,0,0,.45);
+
+}
+
+h1{
+
+    text-align:center;
+
+    font-size:34px;
+
+}
+
+.subtitle{
+
+    text-align:center;
+
+    margin-top:8px;
+
+    color:var(--muted);
+
+}
+
+.hero{
+
+    display:flex;
+
+    justify-content:center;
+
+    margin:20px 0;
+
+}
+
+.hero img{
+
+    width:180px;
+
+}
+
+.clock{
+
+    font-size:48px;
+
+    text-align:center;
+
+    font-weight:bold;
+
+    margin-bottom:20px;
+
+}
+
+button{
+
+    width:100%;
+
+    border:none;
+
+    border-radius:18px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+#sleepButton{
+
+    background:var(--blue);
+
+    color:white;
+
+    padding:18px;
+
+    font-size:24px;
+
+    font-weight:bold;
+
+}
+
+#sleepButton:hover{
+
+    transform:scale(1.03);
+
+}
+
+#undoButton{
+
+    display:none;
+
+    margin-top:10px;
+
+    padding:14px;
+
+    background:#8d2424;
+
+    color:white;
+
+}
+
+.status{
+
+    margin-top:18px;
+
+    text-align:center;
+
+    font-size:20px;
+
+    font-weight:bold;
+
+}
+
+.stats{
+
+    margin-top:25px;
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:12px;
+
+}
+
+.stat{
+
+    background:var(--panel2);
+
+    padding:16px;
+
+    border-radius:16px;
+
+    text-align:center;
+
+}
+
+.stat small{
+
+    display:block;
+
+    color:var(--muted);
+
+    margin-bottom:6px;
+
+}
+
+.stat span{
+
+    font-size:30px;
+
+    font-weight:bold;
+
+}
+
+.calendarTitle{
+
+    margin-top:28px;
+
+    text-align:center;
+
+    font-size:24px;
+
+    font-weight:bold;
+
+}
+
+.calendar{
+
+    margin-top:20px;
+
+    display:grid;
+
+    grid-template-columns:repeat(7,1fr);
+
+    gap:10px;
+
+}
+
+.week{
+
+    text-align:center;
+
+    color:var(--muted);
+
+    font-size:12px;
+
+}
+
+.day{
+
+    height:60px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:16px;
+    background:#31465f;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.25s;
+    user-select:none;
+
+}
+
+.day.green{
+
+    background:#22c55e;
+    color:white;
+
+}
+
+.day.yellow{
+
+    background:#facc15;
+    color:#222;
+
+}
+
+.day.red{
+
+    background:#ef4444;
+    color:white;
+
+}
+
+.day:hover{
+
+    transform:scale(1.08);
+
+    box-shadow:0 0 12px rgba(255,255,255,.18);
+
+}
+
+.legend{
+
+    margin-top:18px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    font-size:12px;
+
+    color:var(--muted);
+
+}
+
+.legend div{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+}
+
+.dot{
+
+    width:12px;
+
+    height:12px;
+
+    border-radius:50%;
+
+}
+
+.footer{
+
+    margin-top:24px;
+
+    text-align:center;
+
+    color:var(--muted);
+
+    font-size:13px;
+
+}
+
+@media (max-width:600px){
+
+    body{
+        padding:10px;
+    }
+
+    .card{
+        padding:15px;
+        border-radius:18px;
+    }
+
+    h1{
+        font-size:28px;
+    }
+
+    .hero img{
+        width:130px;
+    }
+
+    .clock{
+        font-size:34px;
+    }
+
+    #sleepButton{
+        font-size:20px;
+        padding:16px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .calendar{
+        gap:4px;
+    }
+
+    .day{
+        height:42px;
+        font-size:15px;
+        border-radius:10px;
+    }
+
+    .calendarTitle{
+        font-size:20px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="card">
+
+<h1>🌙 Hora de Dormir</h1>
+
+<div class="subtitle">
+
+Objetivo: antes de las 00:00
+
+</div>
+
+<div class="hero">
+
+<img src="https://media.tenor.com/VhQ0XQdK0U4AAAAAi/sleep-sleeping.gif">
+
+</div>
+
+<div id="clock" class="clock">
+
+00:00:00
+
+</div>
+
+<button id="sleepButton">
+
+🛏️ Estoy en la cama
+
+</button>
+
+<button id="undoButton">
+
+Deshacer
+
+</button>
+
+<div id="status" class="status">
+
+Todavía no has registrado hoy.
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+
+<small>🟢 Verdes</small>
+
+<span id="greenCount">0</span>
+
+</div>
+
+<div class="stat">
+
+<small>🔥 Racha</small>
+
+<span id="streak">0</span>
+
+</div>
+
+<div class="stat">
+
+<small>⏰ Hora media</small>
+
+<span id="average">--:--</span>
+
+</div>
+
+<div class="stat">
+
+<small>📊 Total</small>
+
+<span id="total">0</span>
+
+</div>
+
+<div class="calendarTitle">
+
+<button id="prevMonth" class="navBtn">❮</button>
+
+<span id="monthTitle"></span>
+
+<button id="nextMonth" class="navBtn">❯</button>
+
+</div>
+
+<div id="calendar" class="calendar">
+
+</div>
+
+<div class="legend">
+
+<div>
+
+<span class="dot" style="background:#22c55e"></span>
+
+Antes de 00:00
+
+</div>
+
+<div>
+
+<span class="dot" style="background:#facc15"></span>
+
+00:00-01:00
+
+</div>
+
+<div>
+
+<span class="dot" style="background:#ef4444"></span>
+
+>01:00
+
+</div>
+
+</div>
+
+<div class="footer">
+
+Cada noche solo necesitas pulsar un botón ❤️
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const STORAGE="horaDormir";
+
+let records=JSON.parse(localStorage.getItem(STORAGE)||"{}");
+
+const clock=document.getElementById("clock");
+const sleepButton=document.getElementById("sleepButton");
+const undoButton=document.getElementById("undoButton");
+const status=document.getElementById("status");
+
+const calendar=document.getElementById("calendar");
+const monthTitle=document.getElementById("monthTitle");
+
+const greenCount=document.getElementById("greenCount");
+const streak=document.getElementById("streak");
+const average=document.getElementById("average");
+const total=document.getElementById("total");
+
+const months=[
+"Enero","Febrero","Marzo","Abril","Mayo","Junio",
+"Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
+];
+
+const week=["L","M","X","J","V","S","D"];
+
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+
+function pad(n){
+    return String(n).padStart(2,"0");
+}
+
+function tick(){
+
+    clock.textContent=
+    new Date().toLocaleTimeString("es-ES");
+
+}
+
+setInterval(tick,1000);
+
+tick();
+
+/* ===========================
+   PARTE 2
+=========================== */
+
+function todayKey(){
+
+    const d = new Date();
+
+    // Si todavía son horas de la madrugada,
+    // el registro pertenece al día anterior.
+    if(d.getHours() < 6){
+        d.setDate(d.getDate() - 1);
+    }
+
+    return d.getFullYear() + "-" +
+           pad(d.getMonth() + 1) + "-" +
+           pad(d.getDate());
+
+}
+
+function getColor(h,m){
+
+    // Verde
+    if(h >= 6 && h <= 23){
+
+        return "green";
+
+    }
+
+    // Amarillo
+    if(h === 0){
+
+        return "yellow";
+
+    }
+
+    // Rojo
+    return "red";
+
+}
+
+function save(){
+
+    localStorage.setItem(
+
+        STORAGE,
+
+        JSON.stringify(records)
+
+    );
+
+}
+
+sleepButton.onclick=function(){
+
+    const now=new Date();
+
+    const key=todayKey();
+
+    records[key]={
+
+        hour:now.getHours(),
+
+        minute:now.getMinutes(),
+
+        time:pad(now.getHours())+":"+pad(now.getMinutes()),
+
+        color:getColor(
+
+            now.getHours(),
+
+            now.getMinutes()
+
+        )
+
+    };
+
+    save();
+
+    render();
+
+}
+
+undoButton.onclick=function(){
+
+    delete records[todayKey()];
+
+    save();
+
+    render();
+
+}
+
+function render(){
+
+    calendar.innerHTML="";
+
+    week.forEach(w=>{
+
+        const e=document.createElement("div");
+
+        e.className="week";
+
+        e.textContent=w;
+
+        calendar.appendChild(e);
+
+    });
+
+    const now=new Date();
+
+const year = currentYear;
+const month = currentMonth;
+
+    monthTitle.textContent=
+
+        months[month]+" "+year;
+
+    const firstDay=new Date(
+
+        year,
+
+        month,
+
+        1
+
+    );
+
+    const offset=(firstDay.getDay()+6)%7;
+
+    const daysInMonth=new Date(
+
+        year,
+
+        month+1,
+
+        0
+
+    ).getDate();
+
+    for(let i=0;i<offset;i++){
+
+        calendar.appendChild(
+
+            document.createElement("div")
+
+        );
+
+    }
+
+    let greens=0;
+
+    let totalRegs=0;
+
+    let totalMinutes=0;
+
+    for(let day=1;day<=daysInMonth;day++){
+
+        const key=
+
+        year+"-"+
+
+        pad(month+1)+"-"+
+
+        pad(day);
+
+        const cell=document.createElement("div");
+
+        cell.className="day";
+
+        cell.textContent=day;
+
+if(
+    day===now.getDate() &&
+    month===now.getMonth() &&
+    year===now.getFullYear()
+){
+
+    cell.style.outline="2px solid white";
+
+}
+
+        if(records[key]){
+
+            cell.classList.add(
+
+                records[key].color
+
+            );
+
+            totalRegs++;
+
+            if(records[key].color==="green")
+
+                greens++;
+
+            totalMinutes+=
+
+                records[key].hour*60+
+
+                records[key].minute;
+
+            cell.title=
+
+                records[key].time;
+
+        }
+
+        cell.onclick=function(){
+
+            if(records[key]){
+
+                alert(
+
+                "Fecha: "+key+
+
+                "\nHora: "+records[key].time+
+
+                "\nEstado: "+records[key].color
+
+                );
+
+            }
+
+        }
+
+        calendar.appendChild(cell);
+
+    }
+
+    greenCount.textContent=greens;
+
+    total.textContent=totalRegs;
+
+    if(totalRegs){
+
+        const avg=Math.round(
+
+            totalMinutes/
+
+            totalRegs
+
+        );
+
+        average.textContent=
+
+        pad(Math.floor(avg/60)%24)+
+
+        ":"+
+
+        pad(avg%60);
+
+    }else{
+
+        average.textContent="--:--";
+
+    }
+
+    renderToday();
+
+    renderStreak();
+
+}
+
+function renderToday(){
+
+    const t=records[todayKey()];
+
+    if(!t){
+
+        undoButton.style.display="none";
+
+        status.textContent=
+
+        "Todavía no has registrado hoy.";
+
+        status.style.color="white";
+
+        return;
+
+    }
+
+    undoButton.style.display="block";
+
+    if(t.color==="green"){
+
+        status.textContent=
+
+        "🟢 Perfecto. "+t.time;
+
+        status.style.color="#22c55e";
+
+    }
+
+    if(t.color==="yellow"){
+
+        status.textContent=
+
+        "🟡 Bien. "+t.time;
+
+        status.style.color="#facc15";
+
+    }
+
+    if(t.color==="red"){
+
+        status.textContent=
+
+        "🔴 Mañana mejor. "+t.time;
+
+        status.style.color="#ef4444";
+
+    }
+
+}
+
+/* ===========================
+   PARTE 3
+=========================== */
+
+function renderStreak(){
+
+    const keys=Object.keys(records).sort();
+
+    let best=0;
+    let current=0;
+
+    for(const key of keys){
+
+        if(records[key].color==="green"){
+
+            current++;
+
+            if(current>best)
+                best=current;
+
+        }else{
+
+            current=0;
+
+        }
+
+    }
+
+    streak.textContent=best;
+
+}
+
+function exportJSON(){
+
+    const blob=new Blob(
+
+        [JSON.stringify(records,null,2)],
+
+        {type:"application/json"}
+
+    );
+
+    const url=URL.createObjectURL(blob);
+
+    const a=document.createElement("a");
+
+    a.href=url;
+
+    a.download="hora-dormir.json";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+}
+
+function clearAll(){
+
+    if(!confirm("¿Eliminar todos los registros?"))
+        return;
+
+    records={};
+
+    save();
+
+    render();
+
+}
+
+// <-- PEGA AQUÍ
+
+document.getElementById("prevMonth").onclick = function(){
+
+    currentMonth--;
+
+    if(currentMonth < 0){
+        currentMonth = 11;
+        currentYear--;
+    }
+
+    render();
+
+};
+
+document.getElementById("nextMonth").onclick = function(){
+
+    currentMonth++;
+
+    if(currentMonth > 11){
+        currentMonth = 0;
+        currentYear++;
+    }
+
+    render();
+
+};
+
+/* -------- Animación botón -------- */
+sleepButton.addEventListener("mousedown",()=>{
+
+    sleepButton.style.transform="scale(.96)";
+
+});
+
+sleepButton.addEventListener("mouseup",()=>{
+
+    sleepButton.style.transform="scale(1)";
+
+});
+
+sleepButton.addEventListener("mouseleave",()=>{
+
+    sleepButton.style.transform="scale(1)";
+
+});
+
+/* -------- Atajo ENTER -------- */
+
+window.addEventListener("keydown",e=>{
+
+    if(e.key==="Enter"){
+
+        sleepButton.click();
+
+    }
+
+});
+
+/* -------- Primera carga -------- */
+
+render();
+
+/* ===========================
+   PARTE 4
+=========================== */
+
+/* ========= Resumen anual ========= */
+
+const yearly=document.createElement("div");
+
+yearly.style.marginTop="28px";
+
+document.querySelector(".card").appendChild(yearly);
+
+function renderYear(){
+
+    let html="";
+
+    html+="<h3 style='text-align:center;margin-bottom:15px'>📆 Resumen anual</h3>";
+
+    const year=new Date().getFullYear();
+
+    for(let m=0;m<12;m++){
+
+        let g=0;
+        let y=0;
+        let r=0;
+
+        for(const key in records){
+
+            if(!key.startsWith(year+"-"+pad(m+1))) continue;
+
+            if(records[key].color==="green") g++;
+            else if(records[key].color==="yellow") y++;
+            else r++;
+
+        }
+
+        html+=`
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            margin:8px 0;
+            background:#1b2c44;
+            border-radius:12px;
+            padding:10px;
+        ">
+            <b>${months[m]}</b>
+
+            <span>
+
+            🟢 ${g}
+
+            🟡 ${y}
+
+            🔴 ${r}
+
+            </span>
+
+        </div>
+        `;
+
+    }
+
+    yearly.innerHTML=html;
+
+}
+
+/* ========= Porcentaje de verdes ========= */
+
+const percent=document.createElement("div");
+
+percent.className="stat";
+
+percent.innerHTML=`
+
+<small>🎯 % Verdes</small>
+
+<span id="greenPercent">0%</span>
+
+`;
+
+document.querySelector(".stats").appendChild(percent);
+
+function renderPercent(){
+
+    const totalRegs=Object.keys(records).length;
+
+    if(totalRegs===0){
+
+        document.getElementById("greenPercent").textContent="0%";
+
+        return;
+
+    }
+
+    let greens=0;
+
+    for(const k in records){
+
+        if(records[k].color==="green")
+
+            greens++;
+
+    }
+
+    document.getElementById("greenPercent").textContent=
+
+        Math.round(
+
+            greens*100/totalRegs
+
+        )+"%";
+
+}
+
+/* ========= Barra de progreso ========= */
+
+const progress=document.createElement("div");
+
+progress.style.marginTop="25px";
+
+progress.innerHTML=`
+
+<div style="margin-bottom:8px">
+
+Objetivo del mes
+
+</div>
+
+<div style="
+
+background:#32465d;
+
+height:16px;
+
+border-radius:20px;
+
+overflow:hidden;
+
+">
+
+<div id="progressBar"
+
+style="
+
+height:100%;
+
+width:0%;
+
+background:#22c55e;
+
+transition:.4s;
+
+">
+
+</div>
+
+</div>
+
+`;
+
+document.querySelector(".card").appendChild(progress);
+
+function renderProgress(){
+
+    const now=new Date();
+
+    const daysMonth=
+
+    new Date(
+
+        now.getFullYear(),
+
+        now.getMonth()+1,
+
+        0
+
+    ).getDate();
+
+    let greens=0;
+
+    for(const key in records){
+
+        if(
+
+            key.startsWith(
+
+                now.getFullYear()+"-"+
+
+                pad(now.getMonth()+1)
+
+            )
+
+        ){
+
+            if(records[key].color==="green")
+
+                greens++;
+
+        }
+
+    }
+
+    document.getElementById("progressBar").style.width=
+
+    (greens*100/daysMonth)+"%";
+
+}
+
+/* ========= Decoración del estado ========= */
+
+const oldRenderToday=renderToday;
+
+renderToday=function(){
+
+    oldRenderToday();
+
+    const t=records[todayKey()];
+
+    if(!t) return;
+
+    if(t.color==="green"){
+
+        status.innerHTML+=" 🌙✨";
+
+    }
+
+}
+
+/* ========= Ampliamos render ========= */
+
+const oldRender=render;
+
+render=function(){
+
+    oldRender();
+
+    renderYear();
+
+    renderPercent();
+
+    renderProgress();
+
+}
+
+/* ========= Recargamos ========= */
+
+render();
+
+/* ===========================
+   PARTE 5
+=========================== */
+
+/* =====================================
+   PERSONAJE + FONDO + ANIMACIONES
+===================================== */
+
+/* ---------- Fondo estrellado ---------- */
+
+const stars=document.createElement("div");
+
+stars.style.position="fixed";
+stars.style.left="0";
+stars.style.top="0";
+stars.style.width="100%";
+stars.style.height="100%";
+stars.style.pointerEvents="none";
+stars.style.zIndex="-1";
+
+document.body.appendChild(stars);
+
+for(let i=0;i<90;i++){
+
+    const s=document.createElement("div");
+
+    s.style.position="absolute";
+
+    s.style.width=Math.random()*3+1+"px";
+
+    s.style.height=s.style.width;
+
+    s.style.borderRadius="50%";
+
+    s.style.background="white";
+
+    s.style.opacity=Math.random();
+
+    s.style.left=Math.random()*100+"vw";
+
+    s.style.top=Math.random()*100+"vh";
+
+    s.animate([
+
+        {opacity:.2},
+
+        {opacity:1},
+
+        {opacity:.2}
+
+    ],{
+
+        duration:3000+Math.random()*5000,
+
+        iterations:Infinity
+
+    });
+
+    stars.appendChild(s);
+
+}
+
+/* ---------- Personaje ---------- */
+
+const hero=document.querySelector(".hero");
+
+hero.innerHTML=`
+
+<img
+id="moon"
+src="https://cdn.phototourl.com/free/2026-07-13-e0350632-ce68-4621-ab0b-ea505efbed4e.png"
+style="
+width:190px;
+user-select:none;
+pointer-events:none;
+transition:.35s;
+">
+
+`;
+
+/* ---------- Cambia según el resultado ---------- */
+
+function updateMoon(){
+
+    const t=records[todayKey()];
+
+    const moon=document.getElementById("moon");
+
+    if(!t){
+
+        moon.textContent="🙂";
+
+        return;
+
+    }
+
+    if(t.color==="green"){
+
+        moon.textContent="😴";
+
+    }
+
+    if(t.color==="yellow"){
+
+        moon.textContent="🥱";
+
+    }
+
+    if(t.color==="red"){
+
+        moon.textContent="😵";
+
+    }
+
+}
+
+/* ---------- Animación ---------- */
+
+function celebrate(){
+
+    const moon=document.getElementById("moon");
+
+    moon.animate([
+
+        {transform:"translateY(0px) scale(1)"},
+
+        {transform:"translateY(-10px) scale(1.15)"},
+
+        {transform:"translateY(0px) scale(1)"}
+
+    ],{
+
+        duration:500
+
+    });
+
+}
+
+/* ---------- Confeti sencillo ---------- */
+
+function confetti(){
+
+    for(let i=0;i<35;i++){
+
+        const c=document.createElement("div");
+
+        c.style.position="fixed";
+
+        c.style.width="8px";
+
+        c.style.height="8px";
+
+        c.style.left="50%";
+
+        c.style.top="45%";
+
+        c.style.borderRadius="50%";
+
+        c.style.background=[
+
+            "#22c55e",
+
+            "#3b82f6",
+
+            "#facc15",
+
+            "#ef4444"
+
+        ][Math.floor(Math.random()*4)];
+
+        document.body.appendChild(c);
+
+        const x=(Math.random()-0.5)*500;
+
+        const y=(Math.random()-0.5)*500;
+
+        c.animate([
+
+            {
+
+                transform:"translate(0,0)",
+
+                opacity:1
+
+            },
+
+            {
+
+                transform:`translate(${x}px,${y}px)`,
+
+                opacity:0
+
+            }
+
+        ],{
+
+            duration:1000
+
+        });
+
+        setTimeout(()=>c.remove(),1000);
+
+    }
+
+}
+
+/* ---------- Mejoramos render ---------- */
+
+const previousRender=render;
+
+render=function(){
+
+    previousRender();
+
+    updateMoon();
+
+}
+
+/* ---------- Mejoramos botón ---------- */
+
+const oldClick=sleepButton.onclick;
+
+sleepButton.onclick=function(){
+
+    oldClick();
+
+    updateMoon();
+
+    celebrate();
+
+    const t=records[todayKey()];
+
+    if(t && t.color==="green"){
+
+        confetti();
+
+    }
+
+}
+
+/* ---------- Mensaje motivacional ---------- */
+
+const quotes=[
+
+"Descansar también es avanzar 🌙",
+
+"Cada noche cuenta 💙",
+
+"Mañana rendirás mejor 😴",
+
+"Una buena noche cambia el día ✨",
+
+"Hoy has cumplido contigo mismo ⭐"
+
+];
+
+const quote=document.createElement("div");
+
+quote.style.marginTop="20px";
+
+quote.style.textAlign="center";
+
+quote.style.color="#94a3b8";
+
+quote.style.fontStyle="italic";
+
+quote.textContent=
+
+quotes[Math.floor(Math.random()*quotes.length)];
+
+document.querySelector(".card").appendChild(quote);
+
+updateMoon();
+
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js")
+            .then(() => console.log("Service Worker registrado"))
+            .catch(err => console.error(err));
+    });
+}
+</script>
+
+</body>
+
+</html>
