@@ -1,6 +1,6 @@
 {
   "name": "Hora de Dormir",
-  "short_name": "Dormir",
+  "short_name": "Hora de Dormir",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#08111f",
