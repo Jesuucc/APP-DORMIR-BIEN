@@ -752,22 +752,13 @@ if(
 
     cell.classList.add(records[key].color);
 
-    totalRegs++;
+if(records[key]){
 
-    if(records[key].color==="green")
-        greens++;
+    cell.classList.add(records[key].color);
 
-    let minutes =
-        records[key].hour * 60 +
-        records[key].minute;
+    cell.title = records[key].time;
 
-    // Entre las 00:00 y las 05:59
-    // pertenece a la noche anterior
-    if(records[key].hour < 6){
-        minutes += 1440;
-    }
-
-    totalMinutes += minutes;
+}
 
     cell.title = records[key].time;
 
@@ -794,6 +785,29 @@ if(
         calendar.appendChild(cell);
 
     }
+
+    greens = 0;
+totalRegs = 0;
+totalMinutes = 0;
+
+for (const key in records) {
+
+    totalRegs++;
+
+    if (records[key].color === "green") {
+        greens++;
+    }
+
+    let minutes =
+        records[key].hour * 60 +
+        records[key].minute;
+
+    if (records[key].hour < 6) {
+        minutes += 1440;
+    }
+
+    totalMinutes += minutes;
+}
 
     greenCount.textContent=greens;
 
