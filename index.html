@@ -748,31 +748,30 @@ if(
 
 }
 
-        if(records[key]){
+     if(records[key]){
 
-            cell.classList.add(
+    cell.classList.add(records[key].color);
 
-                records[key].color
+    totalRegs++;
 
-            );
+    if(records[key].color==="green")
+        greens++;
 
-            totalRegs++;
+    let minutes =
+        records[key].hour * 60 +
+        records[key].minute;
 
-            if(records[key].color==="green")
+    // Entre las 00:00 y las 05:59
+    // pertenece a la noche anterior
+    if(records[key].hour < 6){
+        minutes += 1440;
+    }
 
-                greens++;
+    totalMinutes += minutes;
 
-            totalMinutes+=
+    cell.title = records[key].time;
 
-                records[key].hour*60+
-
-                records[key].minute;
-
-            cell.title=
-
-                records[key].time;
-
-        }
+}
 
         cell.onclick=function(){
 
@@ -800,25 +799,32 @@ if(
 
     total.textContent=totalRegs;
 
-    if(totalRegs){
+console.log("Número de registros:", totalRegs);
 
-        const avg=Math.round(
+for (const key in records) {
+    console.log(
+        key,
+        records[key].time,
+        records[key].hour,
+        records[key].minute
+    );
+}
 
-            totalMinutes/
+   if(totalRegs){
 
-            totalRegs
+    let avg = Math.round(totalMinutes / totalRegs);
 
-        );
+    // Volvemos al formato 00:00-23:59
+    if(avg >= 24 * 60){
+        avg -= 24 * 60;
+    }
 
-        average.textContent=
+    average.textContent =
+        pad(Math.floor(avg / 60)) +
+        ":" +
+        pad(avg % 60);
 
-        pad(Math.floor(avg/60)%24)+
-
-        ":"+
-
-        pad(avg%60);
-
-    }else{
+}else{
 
         average.textContent="--:--";
 
